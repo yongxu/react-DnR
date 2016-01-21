@@ -7,7 +7,7 @@ module.exports = {
     //'webpack/hot/dev-server',
     './src/index.js' 
   ],
-  devtool: 'eval',
+  devtool: 'source-map',
   output: {
     path: path.join(__dirname, 'public'),
     filename: 'bundle.js'
