@@ -31,9 +31,12 @@ export default class DnR extends React.Component {
 		this.cursorX = 0;
 		this.cursorY = 0;
 		this.clicked = null;
-		this.canResize = false;
+		this.isResizing = false;
+	  this.panePosition = {};
 		this.state = {
 			canDrag: false,
+			width: this.props.initialWidth,
+			height: this.props.initialHeight,
 			hitEdges: {
 				top: false,
 				bottom: false,
@@ -43,24 +46,20 @@ export default class DnR extends React.Component {
 		};
 	}
 	componentDidMount() {
-		// pane.addEventListener('mousedown', onMouseDown);
-		// window.addEventListener('mousemove', onMove);
-		// window.addEventListener('mouseup', onUp);
-
-		// Touch events	
-		// pane.addEventListener('touchstart', onTouchDown);
-		// window.addEventListener('touchmove', onTouchMove);
-		// window.addEventListener('touchend', onTouchEnd);
+		this.mouseMoveListener = window.addEventListener('mousemove', this._onMove.bind(this));
 	}
 	componentDidUpdate() {
 	}
 	componentWillUnmount() {
+		window.removeEventListener('mousemove', this.mouseMoveListener);
 	}
 	render() {
 		const {
       style,
       titleStyle,
       shadowPaneStyle,
+      minWidth,
+      minHeight,
       ...other,
     } = this.props;
 
@@ -80,12 +79,35 @@ export default class DnR extends React.Component {
 	    cursor = 'default';
 	  }
 
+	  if (this.isResizing && this.clicked !== null
+	  		&& (hits.top || hits.bottom || hits.left || hits.right)) {
+	  	const boundingBox = this.clicked.boundingBox;
+
+	  	if (hits.right) this.panePosition.width = Math.max(this.cursorX - boundingBox.left, minWidth) + 'px';
+	    if (hits.bottom) this.panePosition.height = Math.max(this.cursorY - boundingBox.top, minHeight) + 'px';
+
+	    if (hits.left) {
+	      let currentWidth = boundingBox.right - this.cursorX;
+	      if (currentWidth > minWidth) {
+	        this.panePosition.width = currentWidth + 'px';
+	        this.panePosition.left = this.cursorX + 'px';	
+	      }
+	    }
+
+	    if (hits.top) {
+	      let currentHeight = boundingBox.bottom - this.cursorY;
+	      if (currentHeight > minHeight) {
+	        this.panePosition.height = currentHeight + 'px';
+	        this.panePosition.top = this.cursorY + 'px';	
+	      }
+	    }
+	  }
+
 		return (
 			<div ref="pane"
 				onMouseDownCapture={this._onDown.bind(this)}
-				onMouseMoveCapture={this._cursorStatus.bind(this)}
-				onMouseUpCapture={()=>console.log('mouseup')}
-				style={{...defaultStyles.pane, cursor:cursor, ...style}}>
+				onMouseUpCapture={this._onUp.bind(this)}
+				style={{...defaultStyles.pane, cursor:cursor, ...style, ...this.panePosition}}>
 				<div ref="title"
 					style={{...defaultStyles.title, ...titleStyle}}>
 					{this.props.title}
@@ -117,21 +139,21 @@ export default class DnR extends React.Component {
 					right: hitRight
 				}
 			});
-			console.log(`top:${hitTop} bot:${hitBottom} left:${hitLeft} right:${hitRight}`);
 		}
 
 		if (hitTop || hitBottom || hitLeft || hitRight){
-			this.canResize = true;
-			this.canDrag = false;
+			if (this.state.canDrag === true)
+				this.setState({canDrag:false});
 			e.stopPropagation();
 		}
 		else {
-			this.canResize = false;
 			const titleBounding = this.refs.title.getBoundingClientRect();
 			if (this.cursorX > titleBounding.left && this.cursorX < titleBounding.right &&
 					this.cursorY > titleBounding.top && this.cursorY < titleBounding.bottom) {
-				if(this.state.canDrag === false)
+				if (this.state.canDrag === false) {
+					this.isResizing = false;
 					this.setState({canDrag:true});
+				}
 			}
 			else if (this.state.canDrag === true) {
 				this.setState({canDrag:false});
@@ -140,11 +162,23 @@ export default class DnR extends React.Component {
 	}
 	_onDown(e){
 		this._cursorStatus(e);
-		this.clicked = {x: e.clientX, y: e.clientY};
+		const boundingBox = this.refs.pane.getBoundingClientRect();
+		this.clicked = {x: e.clientX, y: e.clientY, boundingBox: boundingBox};
 	}
 	_onUp(e){
 		this._cursorStatus(e);
 		this.clicked = null;
+		this.isResizing = false;
+	}
+	_onMove(e){
+		this._cursorStatus(e);
+		if (this.clicked !== null) {
+			this.isResizing = true;
+			this.forceUpdate();
+		}
+		else{
+			this.isResizing = false;
+		}
 	}
 }
 
@@ -159,10 +193,14 @@ DnR.propTypes = {
     minWidth: React.PropTypes.number,
     minHeight: React.PropTypes.number,
     edgeDetectionRange: React.PropTypes.number,
+    initialWidth: React.PropTypes.number,
+    initialHeight: React.PropTypes.number,
 };
 
 DnR.defaultProps = {
 	minWidth: 20,
 	minHeight: 20,
 	edgeDetectionRange: 5,
+	initialWidth: null,
+	initialHeight: null,
 };
