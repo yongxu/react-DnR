@@ -1,13 +1,14 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import DnR from './DnR';
+import DnR from '../lib/DnR';
 
 let paneStyle = {
 	width: '50%',
 	height: '50%',
 	top: '25%',
 	left: '25%',
-	background: '#090'
+	background: '#090',
+	border: '2px solid',
 }
 
 ReactDOM.render((
