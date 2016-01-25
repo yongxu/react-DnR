@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import DnR from '../lib/DnR';
 
+import theme from '../lib/addons';
 let paneStyle = {
 	width: '50%',
 	height: '50%',
@@ -9,7 +10,10 @@ let paneStyle = {
 	left: '25%',
 	background: '#090',
 	border: '2px solid',
+	borderRadius: '5px'
 }
+
+
 
 ReactDOM.render((
 	<div style={{
