@@ -2,18 +2,16 @@ import React from "react";
 import ReactDOM from "react-dom";
 import DnR from '../lib/DnR';
 
-import theme from '../lib/addons';
+import {OSXTheme} from '../lib/addons';
 let paneStyle = {
 	width: '50%',
 	height: '50%',
 	top: '25%',
 	left: '25%',
-	background: '#090',
-	border: '2px solid',
-	borderRadius: '5px'
+	backgroundColor: 'rgb(37, 204, 62)'
 }
 
-
+let OSX = OSXTheme('test');
 
 ReactDOM.render((
 	<div style={{
@@ -26,16 +24,7 @@ ReactDOM.render((
 		backgroundImage: `url(${require('../img/bg1.png')})`
 //		backgroundImage: '-webkit-radial-gradient(top, circle cover, #00d2ff 0%, #3a7bd5 80%)'
 	}}>
-		<DnR
-			style={paneStyle}
-			title={<span>test</span>}
-			titleStyle={{
-				fontFamily: 'monospace',
-				background: 'blue',
-				color: 'white',
-				fontSize: '24px',
-				height: '30px'
-			}}>
+		<DnR {...OSX} style={paneStyle}>
 			content
 		</DnR>
 	</div>

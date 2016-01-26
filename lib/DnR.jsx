@@ -1,9 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
-export const defaultStyles = {
+export const defaultTheme = {
   title: {
-    textAlign: 'center',
     userSelect: 'none',
     WebkitUserSelect: 'none',
     msUserSelect: 'none',
@@ -62,7 +61,7 @@ export default class DnR extends React.Component {
       style,
       titleStyle,
       snapShadowStyle,
-      styles,
+      theme,
       minWidth,
       minHeight,
       canSnap,
@@ -101,11 +100,11 @@ export default class DnR extends React.Component {
 
     let titleBar = (
         <div ref="title"
-          style={{...styles.title, ...titleStyle}}>
+          style={{...theme.title, ...titleStyle}}>
           {this.props.title}
         </div>);
     let snapShadow = canSnap ? (
-      <div ref="snapShadow" style={{...styles.snapShadow, ...snapShadowStyle}}>
+      <div ref="snapShadow" style={{...theme.snapShadow, ...snapShadowStyle}}>
       </div>) : null;
 
     return (
@@ -116,7 +115,7 @@ export default class DnR extends React.Component {
             e.preventDefault();
           }
         }}
-        style={{...styles.frame, cursor:this.state.cursor, ...style, ...this.windowPosition}}
+        style={{...theme.frame, cursor:this.state.cursor, ...style, ...this.windowPosition}}
         {...other}>
         {titleBar}
         {this.props.children}
@@ -197,7 +196,7 @@ DnR.propTypes = {
     titleStyle: React.PropTypes.object,
     canSnap: React.PropTypes.bool,
     snapShadowStyle: React.PropTypes.object,
-    styles: React.PropTypes.object,
+    theme: React.PropTypes.object,
     minWidth: React.PropTypes.number,
     minHeight: React.PropTypes.number,
     edgeDetectionRange: React.PropTypes.number,
@@ -209,7 +208,7 @@ DnR.defaultProps = {
   minWidth: 20,
   minHeight: 20,
   edgeDetectionRange: 4,
-  styles: defaultStyles,
+  theme: defaultTheme,
   canSnap: false,
   initialWidth: null,
   initialHeight: null,
