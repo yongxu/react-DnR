@@ -8,7 +8,7 @@ let paneStyle = {
 	height: '50%',
 	top: '25%',
 	left: '25%',
-	backgroundColor: 'rgb(37, 204, 62)'
+	backgroundColor: 'rgba(0, 0, 0, 0.2)'
 }
 
 let OSX = OSXTheme('test');

@@ -21,6 +21,12 @@ export const defaultTheme = {
     position: 'absolute',
     margin: 0,
     padding: 0,
+    top: 0,
+    width: '100%',
+    height: '100%',
+    zIndex: -1,
+  },
+  shadowTransition: {
     transition: 'all 0.25s ease-in-out',
     WebkitTransition: 'all 0.25s ease-in-out',
     msTransition: 'all 0.25s ease-in-out',
@@ -42,6 +48,12 @@ export default class DnR extends React.Component {
     if (this.props.initialHeight) {
       this.windowPosition.height = this.props.initialHeight;
     }
+    if (this.props.initialTop) {
+      this.windowPosition.top = this.props.initialTop;
+    }
+    if (this.props.initialLeft) {
+      this.windowPosition.left = this.props.initialLeft;
+    }
     this.state = {
       cursor: 'auto',
     };
@@ -55,6 +67,30 @@ export default class DnR extends React.Component {
   componentWillUnmount() {
     window.removeEventListener('mousemove', this.mouseMoveListener);
     window.removeEventListener('mousemove', this.mouseUpListener);
+  }
+  resize(size, updateHistory = true) {
+    const boundingBox = this.refs.frame.getBoundingClientRect();
+
+    if (updateHistory) {
+      this.prevPosition = {
+        top: boundingBox.top,
+        left: boundingBox.left,
+        width: boundingBox.width,
+        height: boundingBox.height,
+      }
+    }
+
+    if (!size) return;
+
+    let {top, left, width, height, right, bottom} = {...boundingBox, ...size};
+    this.windowPosition.top = top;
+    this.windowPosition.left = left;
+    this.windowPosition.width = size.width ? width : right - left;
+    this.windowPosition.height = size.height ? height : bottom - top;
+    this.forceUpdate();
+  }
+  restore(){
+    resize(this.prevPosition);
   }
   render() {
     const {
@@ -79,22 +115,22 @@ export default class DnR extends React.Component {
         if (hits.left) {
           let currentWidth = boundingBox.right - this.cursorX;
           if (currentWidth > minWidth) {
-            this.windowPosition.width = currentWidth + 'px';
-            this.windowPosition.left = this.cursorX + 'px'; 
+            this.windowPosition.width = currentWidth;
+            this.windowPosition.left = this.cursorX; 
           }
         }
 
         if (hits.top) {
           let currentHeight = boundingBox.bottom - this.cursorY;
           if (currentHeight > minHeight) {
-            this.windowPosition.height = currentHeight + 'px';
-            this.windowPosition.top = this.cursorY + 'px';  
+            this.windowPosition.height = currentHeight;
+            this.windowPosition.top = this.cursorY;  
           }
         }
       }
       else if (this.state.cursor === 'move'){
-        this.windowPosition.top = boundingBox.top + this.cursorY - this.clicked.y + 'px';
-        this.windowPosition.left = boundingBox.left + this.cursorX - this.clicked.x + 'px';
+        this.windowPosition.top = boundingBox.top + this.cursorY - this.clicked.y;
+        this.windowPosition.left = boundingBox.left + this.cursorX - this.clicked.x;
       }
     }
 
@@ -104,7 +140,7 @@ export default class DnR extends React.Component {
           {this.props.title}
         </div>);
     let snapShadow = canSnap ? (
-      <div ref="snapShadow" style={{...theme.snapShadow, ...snapShadowStyle}}>
+      <div ref="snapShadow" style={{...theme.shadowTransition, ...theme.snapShadow, ...snapShadowStyle}}>
       </div>) : null;
 
     return (
@@ -202,6 +238,8 @@ DnR.propTypes = {
     edgeDetectionRange: React.PropTypes.number,
     initialWidth: React.PropTypes.number,
     initialHeight: React.PropTypes.number,
+    initialTop: React.PropTypes.number,
+    initialLeft: React.PropTypes.number,
 };
 
 DnR.defaultProps = {
@@ -212,4 +250,6 @@ DnR.defaultProps = {
   canSnap: false,
   initialWidth: null,
   initialHeight: null,
+  initialTop: null,
+  initialLeft: null
 };
