@@ -15,23 +15,12 @@ export const defaultTheme = {
     margin: 0,
     padding: 0,
   },
-  snapShadow: {
-    background: '#999',
-    opacity: 0.2,
-    position: 'absolute',
-    margin: 0,
-    padding: 0,
-    top: 0,
-    width: '100%',
-    height: '100%',
-    zIndex: -1,
-  },
-  shadowTransition: {
+  transition: {
     transition: 'all 0.25s ease-in-out',
     WebkitTransition: 'all 0.25s ease-in-out',
     msTransition: 'all 0.25s ease-in-out',
-    MozTransform: 'all 0.25s ease-in-out',
-    OTransform: 'all 0.25s ease-in-out',
+    MozTransition: 'all 0.25s ease-in-out',
+    OTransition: 'all 0.25s ease-in-out',
   }
 };
 
@@ -96,11 +85,10 @@ export default class DnR extends React.Component {
     const {
       style,
       titleStyle,
-      snapShadowStyle,
       theme,
       minWidth,
       minHeight,
-      canSnap,
+      minimize,
       ...other,
     } = this.props;
 
@@ -136,12 +124,12 @@ export default class DnR extends React.Component {
 
     let titleBar = (
         <div ref="title"
-          style={{...theme.title, ...titleStyle}}>
+          style={{
+            ...theme.title,
+            ...titleStyle
+          }}>
           {this.props.title}
         </div>);
-    let snapShadow = canSnap ? (
-      <div ref="snapShadow" style={{...theme.shadowTransition, ...theme.snapShadow, ...snapShadowStyle}}>
-      </div>) : null;
 
     return (
       <div ref="frame"
@@ -151,11 +139,16 @@ export default class DnR extends React.Component {
             e.preventDefault();
           }
         }}
-        style={{...theme.frame, cursor:this.state.cursor, ...style, ...this.windowPosition}}
+        style={{
+          ...theme.frame,
+          cursor:this.state.cursor,
+          ...style,
+          ...this.windowPosition,
+          transform: minimize ? 'scale(0)' : 'scale(1)'
+        }}
         {...other}>
         {titleBar}
         {this.props.children}
-        {snapShadow}
       </div>
     );
   }
@@ -230,8 +223,7 @@ DnR.propTypes = {
     ]),
     style: React.PropTypes.object,
     titleStyle: React.PropTypes.object,
-    canSnap: React.PropTypes.bool,
-    snapShadowStyle: React.PropTypes.object,
+    minimize: React.PropTypes.false,
     theme: React.PropTypes.object,
     minWidth: React.PropTypes.number,
     minHeight: React.PropTypes.number,
@@ -247,7 +239,7 @@ DnR.defaultProps = {
   minHeight: 20,
   edgeDetectionRange: 4,
   theme: defaultTheme,
-  canSnap: false,
+  minimize: false,
   initialWidth: null,
   initialHeight: null,
   initialTop: null,
