@@ -1,6 +1,6 @@
 {
   "name": "react-dnr",
-  "version": "0.1.3",
+  "version": "0.2.0",
   "description": "react-DnR, dragable and resizable window",
   "main": "dist/DnR.jsx",
   "scripts": {

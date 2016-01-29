@@ -85,7 +85,7 @@ export let OSXTheme = (title) => {
 				...defaultTheme.frame,
 				borderRadius: '5px',
 			},
-			snapShadow: defaultTheme.snapShadow,
+		  transition: 'all 0.25s ease-in-out'
 		},
 		title: (<TitleBar
 				style={style}

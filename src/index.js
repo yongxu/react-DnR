@@ -32,10 +32,16 @@ class App extends React.Component {
 				backgroundImage: `url(${require('../img/bg1.png')})`
 		//		backgroundImage: '-webkit-radial-gradient(top, circle cover, #00d2ff 0%, #3a7bd5 80%)'
 			}}>
-				<button onClick={()=>this.setState({minimize:!this.state.minimize})}>
+				<button onClick={()=>this.refs.dnr.minimize()}>
 					minimize
 				</button>
-				<DnR {...OSX} style={paneStyle} minimize={this.state.minimize}>
+				<button onClick={()=>this.refs.dnr.maximize()}>
+					maximize
+				</button>
+				<button onClick={()=>this.refs.dnr.restore()}>
+					restore
+				</button>
+				<DnR ref='dnr' {...OSX} style={paneStyle}>
 					content
 				</DnR>
 			</div>

@@ -14,72 +14,107 @@ export const defaultTheme = {
     position: 'absolute',
     margin: 0,
     padding: 0,
+    overflow: 'hidden'
   },
-  transition: {
-    transition: 'all 0.25s ease-in-out',
-    WebkitTransition: 'all 0.25s ease-in-out',
-    msTransition: 'all 0.25s ease-in-out',
-    MozTransition: 'all 0.25s ease-in-out',
-    OTransition: 'all 0.25s ease-in-out',
-  }
+  transition: 'all 0.25s ease-in-out'
 };
+
+function prefixedTransition(transition) {
+  return transition ? {
+    transition: transition,
+    WebkitTransition: transition,
+    msTransition: transition,
+    MozTransition: transition,
+    OTransition: transition,
+  } : {};
+}
 
 export default class DnR extends React.Component {
   constructor(props) {
     super(props);
+    const {
+      initialWidth,
+      initialHeight,
+      initialTop,
+      initialLeft,
+      transition,
+      theme
+    } = this.props;
     this.cursorX = 0;
     this.cursorY = 0;
     this.clicked = null;
+    this.allowTransition = false;
     this.windowPosition = {};
-    if (this.props.initialWidth) {
-      this.windowPosition.width = this.props.initialWidth;
+    if (initialWidth) {
+      this.windowPosition.width = initialWidth;
     }
-    if (this.props.initialHeight) {
-      this.windowPosition.height = this.props.initialHeight;
+    if (initialHeight) {
+      this.windowPosition.height = initialHeight;
     }
-    if (this.props.initialTop) {
-      this.windowPosition.top = this.props.initialTop;
+    if (initialTop) {
+      this.windowPosition.top = initialTop;
     }
-    if (this.props.initialLeft) {
-      this.windowPosition.left = this.props.initialLeft;
+    if (initialLeft) {
+      this.windowPosition.left = initialLeft;
     }
     this.state = {
       cursor: 'auto',
+      transition: prefixedTransition(transition ? transition : theme.transition)
     };
   }
   componentDidMount() {
     this.mouseMoveListener = window.addEventListener('mousemove', this._onMove.bind(this));
     this.mouseUpListener = window.addEventListener('mouseup', this._onUp.bind(this));
   }
-  componentDidUpdate() {
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.transition !== this.props.transition){
+      this.setState({transition: prefixedTransition(nextProps.transition)});
+    }
   }
   componentWillUnmount() {
     window.removeEventListener('mousemove', this.mouseMoveListener);
     window.removeEventListener('mousemove', this.mouseUpListener);
   }
-  resize(size, updateHistory = true) {
+  transform(state, allowTransition = true, updateHistory = true) {
     const boundingBox = this.refs.frame.getBoundingClientRect();
 
+    let top = boundingBox.top;
+    let left = boundingBox.left;
+    let width = boundingBox.width;
+    let height = boundingBox.height;
+
     if (updateHistory) {
-      this.prevPosition = {
-        top: boundingBox.top,
-        left: boundingBox.left,
-        width: boundingBox.width,
-        height: boundingBox.height,
+      this.prevState = {
+        top: top,
+        left: left,
+        width: width,
+        height: height,
       }
     }
 
-    if (!size) return;
+    if (!state) return;
 
-    let {top, left, width, height, right, bottom} = {...boundingBox, ...size};
-    this.windowPosition.top = top;
-    this.windowPosition.left = left;
-    this.windowPosition.width = size.width ? width : right - left;
-    this.windowPosition.height = size.height ? height : bottom - top;
+    this.windowPosition.top = typeof state.top === 'number' ? state.top :
+                                state.bottom ? (state.bottom - (state.height || height)) : top;
+    this.windowPosition.left = typeof state.left === 'number' ? state.left :
+                                state.right ? (state.right - (state.width || width)) : left;
+    this.windowPosition.width = typeof state.width === 'number' ? state.width : 
+                                (typeof state.right === 'number' && typeof state.left === 'number') ? state.right - state.left : 
+                                typeof state.right === 'number' ? state.right - this.windowPosition.left : width;
+    this.windowPosition.height = typeof state.height === 'number' ? state.height : 
+                                (typeof state.bottom === 'number' && typeof state.top === 'number') ? state.top - state.bottom : 
+                                typeof state.bottom === 'number' ? state.bottom - this.windowPosition.top : height;
+    this.allowTransition = allowTransition;    
     this.forceUpdate();
   }
-  restore(){
-    resize(this.prevPosition);
+  restore(allowTransition = true) {
+    this.transform(this.prevState, allowTransition);
+  }
+  minimize(allowTransition = true) {
+    this.transform({width: 0, height: 0}, allowTransition);
+  }
+  maximize(allowTransition = true) {
+    this.transform({top: 0, left: 0, width: window.innerWidth, height: window.innerHeight}, allowTransition);
   }
   render() {
     const {
@@ -88,7 +123,7 @@ export default class DnR extends React.Component {
       theme,
       minWidth,
       minHeight,
-      minimize,
+      animate,
       ...other,
     } = this.props;
 
@@ -131,6 +166,8 @@ export default class DnR extends React.Component {
           {this.props.title}
         </div>);
 
+    let frameTransition = (animate && this.allowTransition) ? this.state.transition : {};
+
     return (
       <div ref="frame"
         onMouseDownCapture={this._onDown.bind(this)}
@@ -141,10 +178,10 @@ export default class DnR extends React.Component {
         }}
         style={{
           ...theme.frame,
+          ...frameTransition,
           cursor:this.state.cursor,
           ...style,
           ...this.windowPosition,
-          transform: minimize ? 'scale(0)' : 'scale(1)'
         }}
         {...other}>
         {titleBar}
@@ -200,6 +237,7 @@ export default class DnR extends React.Component {
 
   }
   _onDown(e){
+    this.allowTransition = false;
     this._cursorStatus(e);
     const boundingBox = this.refs.frame.getBoundingClientRect();
     this.clicked = {x: e.clientX, y: e.clientY, boundingBox: boundingBox};
@@ -223,7 +261,6 @@ DnR.propTypes = {
     ]),
     style: React.PropTypes.object,
     titleStyle: React.PropTypes.object,
-    minimize: React.PropTypes.false,
     theme: React.PropTypes.object,
     minWidth: React.PropTypes.number,
     minHeight: React.PropTypes.number,
@@ -232,6 +269,8 @@ DnR.propTypes = {
     initialHeight: React.PropTypes.number,
     initialTop: React.PropTypes.number,
     initialLeft: React.PropTypes.number,
+    transition: React.PropTypes.string,
+    animate: React.PropTypes.bool
 };
 
 DnR.defaultProps = {
@@ -239,9 +278,9 @@ DnR.defaultProps = {
   minHeight: 20,
   edgeDetectionRange: 4,
   theme: defaultTheme,
-  minimize: false,
   initialWidth: null,
   initialHeight: null,
   initialTop: null,
-  initialLeft: null
+  initialLeft: null,
+  animate: true,
 };
