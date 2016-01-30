@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import DnR from '../lib/DnR';
 
-import {OSXTheme} from '../lib/addons';
+import {OSXTheme, WindowsTheme} from '../lib/addons';
 let paneStyle = {
 	width: '50%',
 	height: '50%',
@@ -18,7 +18,13 @@ class App extends React.Component {
       minimize: false
     };
 		this.OSX = OSXTheme({
-			title: 'test',
+			title: 'OSX Theme',
+			onClose: ()=>this.refs.dnr.minimize(),
+			onMinimize: ()=>this.refs.dnr.minimize(),
+			onMaximize: ()=>this.refs.dnr.maximize(),
+		});
+		this.Windows = WindowsTheme({
+			title: 'Windows Theme',
 			onClose: ()=>this.refs.dnr.minimize(),
 			onMinimize: ()=>this.refs.dnr.minimize(),
 			onMaximize: ()=>this.refs.dnr.maximize(),
@@ -34,7 +40,6 @@ class App extends React.Component {
 				height: '100%',
 				position: 'fixed',
 				backgroundImage: `url(${require('../img/bg1.png')})`
-		//		backgroundImage: '-webkit-radial-gradient(top, circle cover, #00d2ff 0%, #3a7bd5 80%)'
 			}}>
 				<button onClick={()=>this.refs.dnr.minimize()}>
 					minimize
@@ -47,10 +52,17 @@ class App extends React.Component {
 				</button>
 				<DnR
 					ref='dnr'
-					{...this.OSX}
+					{...this.Windows}
 					cursorRemap={(c) => c === 'move' ? 'default' : null} 
 					style={paneStyle}>
-					content
+					
+					<DnR
+						ref='dnr'
+						{...this.OSX}
+						cursorRemap={(c) => c === 'move' ? 'default' : null} 
+						style={paneStyle}>
+						content
+					</DnR>
 				</DnR>
 			</div>
 		);

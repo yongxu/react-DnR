@@ -44,18 +44,18 @@ export default class DnR extends React.Component {
     this.cursorY = 0;
     this.clicked = null;
     this.allowTransition = false;
-    this.windowPosition = {};
+    this.frameRect = {};
     if (initialWidth) {
-      this.windowPosition.width = initialWidth;
+      this.frameRect.width = initialWidth;
     }
     if (initialHeight) {
-      this.windowPosition.height = initialHeight;
+      this.frameRect.height = initialHeight;
     }
     if (initialTop) {
-      this.windowPosition.top = initialTop;
+      this.frameRect.top = initialTop;
     }
     if (initialLeft) {
-      this.windowPosition.left = initialLeft;
+      this.frameRect.left = initialLeft;
     }
     this.state = {
       cursor: 'auto',
@@ -94,16 +94,16 @@ export default class DnR extends React.Component {
 
     if (!state) return;
 
-    this.windowPosition.top = typeof state.top === 'number' ? state.top :
+    this.frameRect.top = typeof state.top === 'number' ? state.top :
                                 state.bottom ? (state.bottom - (state.height || height)) : top;
-    this.windowPosition.left = typeof state.left === 'number' ? state.left :
+    this.frameRect.left = typeof state.left === 'number' ? state.left :
                                 state.right ? (state.right - (state.width || width)) : left;
-    this.windowPosition.width = typeof state.width === 'number' ? state.width : 
+    this.frameRect.width = typeof state.width === 'number' ? state.width : 
                                 (typeof state.right === 'number' && typeof state.left === 'number') ? state.right - state.left : 
-                                typeof state.right === 'number' ? state.right - this.windowPosition.left : width;
-    this.windowPosition.height = typeof state.height === 'number' ? state.height : 
+                                typeof state.right === 'number' ? state.right - this.frameRect.left : width;
+    this.frameRect.height = typeof state.height === 'number' ? state.height : 
                                 (typeof state.bottom === 'number' && typeof state.top === 'number') ? state.top - state.bottom : 
-                                typeof state.bottom === 'number' ? state.bottom - this.windowPosition.top : height;
+                                typeof state.bottom === 'number' ? state.bottom - this.frameRect.top : height;
     this.allowTransition = allowTransition;    
     this.forceUpdate();
   }
@@ -134,28 +134,28 @@ export default class DnR extends React.Component {
       const boundingBox = this.clicked.boundingBox;
 
       if (hits.top || hits.bottom || hits.left || hits.right) {
-        if (hits.right) this.windowPosition.width = Math.max(this.cursorX - boundingBox.left, minWidth) + 'px';
-        if (hits.bottom) this.windowPosition.height = Math.max(this.cursorY - boundingBox.top, minHeight) + 'px';
+        if (hits.right) this.frameRect.width = Math.max(this.cursorX - boundingBox.left, minWidth) + 'px';
+        if (hits.bottom) this.frameRect.height = Math.max(this.cursorY - boundingBox.top, minHeight) + 'px';
 
         if (hits.left) {
           let currentWidth = boundingBox.right - this.cursorX;
           if (currentWidth > minWidth) {
-            this.windowPosition.width = currentWidth;
-            this.windowPosition.left = this.cursorX; 
+            this.frameRect.width = currentWidth;
+            this.frameRect.left = this.cursorX; 
           }
         }
 
         if (hits.top) {
           let currentHeight = boundingBox.bottom - this.cursorY;
           if (currentHeight > minHeight) {
-            this.windowPosition.height = currentHeight;
-            this.windowPosition.top = this.cursorY;  
+            this.frameRect.height = currentHeight;
+            this.frameRect.top = this.cursorY;  
           }
         }
       }
       else if (this.state.cursor === 'move'){
-        this.windowPosition.top = boundingBox.top + this.cursorY - this.clicked.y;
-        this.windowPosition.left = boundingBox.left + this.cursorX - this.clicked.x;
+        this.frameRect.top = boundingBox.top + this.cursorY - this.clicked.y;
+        this.frameRect.left = boundingBox.left + this.cursorX - this.clicked.x;
       }
     }
 
@@ -191,7 +191,7 @@ export default class DnR extends React.Component {
           ...frameTransition,
           cursor:cursor,
           ...style,
-          ...this.windowPosition,
+          ...this.frameRect,
         }}
         {...other}>
         {titleBar}
