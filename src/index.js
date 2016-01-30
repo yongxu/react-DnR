@@ -11,14 +11,18 @@ let paneStyle = {
 	backgroundColor: 'rgba(0, 0, 0, 0.2)'
 }
 
-let OSX = OSXTheme('test');
-
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       minimize: false
     };
+		this.OSX = OSXTheme({
+			title: 'test',
+			onClose: ()=>this.refs.dnr.minimize(),
+			onMinimize: ()=>this.refs.dnr.minimize(),
+			onMaximize: ()=>this.refs.dnr.maximize(),
+		});
 	}
 	render() {
 		return (
@@ -41,7 +45,11 @@ class App extends React.Component {
 				<button onClick={()=>this.refs.dnr.restore()}>
 					restore
 				</button>
-				<DnR ref='dnr' {...OSX} style={paneStyle}>
+				<DnR
+					ref='dnr'
+					{...this.OSX}
+					cursorRemap={(c) => c === 'move' ? 'default' : null} 
+					style={paneStyle}>
 					content
 				</DnR>
 			</div>

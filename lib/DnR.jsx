@@ -8,7 +8,7 @@ export const defaultTheme = {
     msUserSelect: 'none',
     MozUserSelect: 'none',
     OUserSelect: 'none',
-    overflow: 'hidden'
+    overflow: 'hidden',
   },
   frame: {
     position: 'absolute',
@@ -124,6 +124,8 @@ export default class DnR extends React.Component {
       minWidth,
       minHeight,
       animate,
+      cursorRemap,
+      children,
       ...other,
     } = this.props;
 
@@ -163,10 +165,18 @@ export default class DnR extends React.Component {
             ...theme.title,
             ...titleStyle
           }}>
-          {this.props.title}
+          {this.props.titleBar}
         </div>);
 
     let frameTransition = (animate && this.allowTransition) ? this.state.transition : {};
+
+    let cursor = this.state.cursor;
+
+    if (cursorRemap) {
+      let res = cursorRemap.call(this,cursor);
+
+      if (res && typeof res === 'string') cursor = res;
+    }
 
     return (
       <div ref="frame"
@@ -179,13 +189,13 @@ export default class DnR extends React.Component {
         style={{
           ...theme.frame,
           ...frameTransition,
-          cursor:this.state.cursor,
+          cursor:cursor,
           ...style,
           ...this.windowPosition,
         }}
         {...other}>
         {titleBar}
-        {this.props.children}
+        {children}
       </div>
     );
   }
@@ -255,22 +265,23 @@ export default class DnR extends React.Component {
 }
 
 DnR.propTypes = {
-    title: React.PropTypes.oneOfType([
-      React.PropTypes.object,
-      React.PropTypes.string,
-    ]),
-    style: React.PropTypes.object,
-    titleStyle: React.PropTypes.object,
-    theme: React.PropTypes.object,
-    minWidth: React.PropTypes.number,
-    minHeight: React.PropTypes.number,
-    edgeDetectionRange: React.PropTypes.number,
-    initialWidth: React.PropTypes.number,
-    initialHeight: React.PropTypes.number,
-    initialTop: React.PropTypes.number,
-    initialLeft: React.PropTypes.number,
-    transition: React.PropTypes.string,
-    animate: React.PropTypes.bool
+  titleBar: React.PropTypes.oneOfType([
+    React.PropTypes.object,
+    React.PropTypes.string,
+  ]),
+  style: React.PropTypes.object,
+  titleStyle: React.PropTypes.object,
+  theme: React.PropTypes.object,
+  minWidth: React.PropTypes.number,
+  minHeight: React.PropTypes.number,
+  edgeDetectionRange: React.PropTypes.number,
+  initialWidth: React.PropTypes.number,
+  initialHeight: React.PropTypes.number,
+  initialTop: React.PropTypes.number,
+  initialLeft: React.PropTypes.number,
+  transition: React.PropTypes.string,
+  animate: React.PropTypes.bool,
+  cursorRemap: React.PropTypes.func,
 };
 
 DnR.defaultProps = {
