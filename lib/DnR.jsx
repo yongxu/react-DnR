@@ -9,12 +9,14 @@ export const defaultTheme = {
     MozUserSelect: 'none',
     OUserSelect: 'none',
     overflow: 'hidden',
+    width: '100%',
+    height: 25,
   },
   frame: {
     position: 'absolute',
     margin: 0,
     padding: 0,
-    overflow: 'hidden'
+    overflow: 'hidden',
   },
   transition: 'all 0.25s ease-in-out'
 };
@@ -33,10 +35,6 @@ export default class DnR extends React.Component {
   constructor(props) {
     super(props);
     const {
-      initialWidth,
-      initialHeight,
-      initialTop,
-      initialLeft,
       transition,
       theme
     } = this.props;
@@ -45,24 +43,25 @@ export default class DnR extends React.Component {
     this.clicked = null;
     this.allowTransition = false;
     this.frameRect = {};
-    if (initialWidth) {
-      this.frameRect.width = initialWidth;
-    }
-    if (initialHeight) {
-      this.frameRect.height = initialHeight;
-    }
-    if (initialTop) {
-      this.frameRect.top = initialTop;
-    }
-    if (initialLeft) {
-      this.frameRect.left = initialLeft;
-    }
     this.state = {
       cursor: 'auto',
       transition: prefixedTransition(transition ? transition : theme.transition)
     };
   }
   componentDidMount() {
+    const {
+      initialWidth,
+      initialHeight,
+      initialTop,
+      initialLeft,
+    } = this.props;
+
+    const boundingBox = this._getFrameRect();
+    this.frameRect.width = initialWidth || boundingBox.width;
+    this.frameRect.height = initialHeight || boundingBox.height;
+    this.frameRect.top = initialTop || this.refs.frame.offsetTop;
+    this.frameRect.left = initialLeft || this.refs.frame.offsetLeft;
+
     this.mouseMoveListener = window.addEventListener('mousemove', this._onMove.bind(this));
     this.mouseUpListener = window.addEventListener('mouseup', this._onUp.bind(this));
   }
@@ -76,10 +75,10 @@ export default class DnR extends React.Component {
     window.removeEventListener('mousemove', this.mouseUpListener);
   }
   transform(state, allowTransition = true, updateHistory = true) {
-    const boundingBox = this.refs.frame.getBoundingClientRect();
+    const boundingBox = this._getFrameRect();
 
-    let top = boundingBox.top;
-    let left = boundingBox.left;
+    let top = this.refs.frame.offsetTop;
+    let left = this.refs.frame.offsetLeft;
     let width = boundingBox.width;
     let height = boundingBox.height;
 
@@ -119,6 +118,7 @@ export default class DnR extends React.Component {
   render() {
     const {
       style,
+      contentStyle,
       titleStyle,
       theme,
       minWidth,
@@ -126,6 +126,7 @@ export default class DnR extends React.Component {
       animate,
       cursorRemap,
       children,
+      boundary,
       ...other,
     } = this.props;
 
@@ -141,7 +142,7 @@ export default class DnR extends React.Component {
           let currentWidth = boundingBox.right - this.cursorX;
           if (currentWidth > minWidth) {
             this.frameRect.width = currentWidth;
-            this.frameRect.left = this.cursorX; 
+            this.frameRect.left = this.clicked.frameLeft + this.cursorX - this.clicked.x; 
           }
         }
 
@@ -149,13 +150,42 @@ export default class DnR extends React.Component {
           let currentHeight = boundingBox.bottom - this.cursorY;
           if (currentHeight > minHeight) {
             this.frameRect.height = currentHeight;
-            this.frameRect.top = this.cursorY;  
+            this.frameRect.top = this.clicked.frameTop + this.cursorY - this.clicked.y;  
           }
         }
       }
       else if (this.state.cursor === 'move'){
-        this.frameRect.top = boundingBox.top + this.cursorY - this.clicked.y;
-        this.frameRect.left = boundingBox.left + this.cursorX - this.clicked.x;
+        this.frameRect.top = this.clicked.frameTop + this.cursorY - this.clicked.y;
+        this.frameRect.left = this.clicked.frameLeft + this.cursorX - this.clicked.x;
+      }
+    }
+
+    if (boundary) {
+      let {
+        top,
+        left,
+        width,
+        height
+      } = this.frameRect;
+      if (typeof boundary.top === 'number' && top < boundary.top) {
+        this.frameRect.top = boundary.top;
+      }
+      if (typeof boundary.bottom === 'number' && top + height > boundary.bottom) {
+        this.frameRect.top = boundary.bottom - height;
+        if (typeof boundary.top === 'number' && this.frameRect.top < boundary.top){
+          this.frameRect.top = boundary.top;
+          this.frameRect.height = boundary.bottom - boundary.top;
+        }
+      }
+      if (typeof boundary.left === 'number' && left < boundary.left) {
+        this.frameRect.left = boundary.left;        
+      }
+      if (typeof boundary.right === 'number' && top + height > boundary.right) {
+        this.frameRect.left = boundary.right - width;
+        if (typeof boundary.left === 'number' && this.frameRect.left < boundary.left){
+          this.frameRect.left = boundary.left;
+          this.frameRect.width = boundary.right - boundary.left;
+        }
       }
     }
 
@@ -195,12 +225,21 @@ export default class DnR extends React.Component {
         }}
         {...other}>
         {titleBar}
-        {children}
+        <div ref='content'
+          style={{position: 'absolute', width: '100%', top: theme.title.height, bottom: 0, ...contentStyle}}>
+          {children}
+        </div>
       </div>
     );
   }
+  _getFrameRect() {
+    return this.refs.frame.getBoundingClientRect();
+  }
+  _getTitleRect() {
+    return this.refs.title.getBoundingClientRect();
+  }
   _cursorStatus(e){
-    const boundingBox = this.refs.frame.getBoundingClientRect();
+    const boundingBox = this._getFrameRect();
     this.cursorX = e.clientX;
     this.cursorY = e.clientY;
 
@@ -227,7 +266,7 @@ export default class DnR extends React.Component {
       e.stopPropagation();
     }
     else {
-      const titleBounding = this.refs.title.getBoundingClientRect();
+      const titleBounding = this._getTitleRect();
       if (this.cursorX > titleBounding.left && this.cursorX < titleBounding.right &&
           this.cursorY > titleBounding.top && this.cursorY < titleBounding.bottom) {
         cursor = 'move';
@@ -249,8 +288,9 @@ export default class DnR extends React.Component {
   _onDown(e){
     this.allowTransition = false;
     this._cursorStatus(e);
-    const boundingBox = this.refs.frame.getBoundingClientRect();
-    this.clicked = {x: e.clientX, y: e.clientY, boundingBox: boundingBox};
+    const boundingBox = this._getFrameRect();
+    this.clicked = {x: e.clientX, y: e.clientY, boundingBox: boundingBox,
+                    frameTop: this.refs.frame.offsetTop, frameLeft: this.refs.frame.offsetLeft};
   }
   _onUp(e){
     this.clicked = null;
@@ -270,6 +310,7 @@ DnR.propTypes = {
     React.PropTypes.string,
   ]),
   style: React.PropTypes.object,
+  contentStyle: React.PropTypes.object,
   titleStyle: React.PropTypes.object,
   theme: React.PropTypes.object,
   minWidth: React.PropTypes.number,
@@ -282,6 +323,7 @@ DnR.propTypes = {
   transition: React.PropTypes.string,
   animate: React.PropTypes.bool,
   cursorRemap: React.PropTypes.func,
+  boundary: React.PropTypes.object,
 };
 
 DnR.defaultProps = {

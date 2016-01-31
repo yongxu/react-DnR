@@ -55,12 +55,12 @@ class App extends React.Component {
 					{...this.Windows}
 					cursorRemap={(c) => c === 'move' ? 'default' : null} 
 					style={paneStyle}>
-					
 					<DnR
 						ref='dnr'
 						{...this.OSX}
 						cursorRemap={(c) => c === 'move' ? 'default' : null} 
-						style={paneStyle}>
+						style={paneStyle}
+						boundary={{top: 0}}>
 						content
 					</DnR>
 				</DnR>
