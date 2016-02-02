@@ -54,6 +54,7 @@ export default class DnR extends React.Component {
       initialHeight,
       initialTop,
       initialLeft,
+      attachedTo,
     } = this.props;
 
     const boundingBox = this._getFrameRect();
@@ -62,8 +63,8 @@ export default class DnR extends React.Component {
     this.frameRect.top = initialTop || this.refs.frame.offsetTop;
     this.frameRect.left = initialLeft || this.refs.frame.offsetLeft;
 
-    this.mouseMoveListener = window.addEventListener('mousemove', this._onMove.bind(this));
-    this.mouseUpListener = window.addEventListener('mouseup', this._onUp.bind(this));
+    this.mouseMoveListener = attachedTo.addEventListener('mousemove', this._onMove.bind(this));
+    this.mouseUpListener = attachedTo.addEventListener('mouseup', this._onUp.bind(this));
   }
   componentWillReceiveProps(nextProps) {
     if (nextProps.transition !== this.props.transition){
@@ -71,8 +72,8 @@ export default class DnR extends React.Component {
     }
   }
   componentWillUnmount() {
-    window.removeEventListener('mousemove', this.mouseMoveListener);
-    window.removeEventListener('mousemove', this.mouseUpListener);
+    this.props.attachedTo.removeEventListener('mousemove', this.mouseMoveListener);
+    this.props.attachedTo.removeEventListener('mousemove', this.mouseUpListener);
   }
   transform(state, allowTransition = true, updateHistory = true) {
     const boundingBox = this._getFrameRect();
@@ -103,7 +104,11 @@ export default class DnR extends React.Component {
     this.frameRect.height = typeof state.height === 'number' ? state.height : 
                                 (typeof state.bottom === 'number' && typeof state.top === 'number') ? state.top - state.bottom : 
                                 typeof state.bottom === 'number' ? state.bottom - this.frameRect.top : height;
-    this.allowTransition = allowTransition;    
+    this.allowTransition = allowTransition;
+
+    if(this.props.onTransform){
+      setTimeout(this.props.onTransform.bind(this,this.frameRect, this.prevState));
+    }
     this.forceUpdate();
   }
   restore(allowTransition = true) {
@@ -113,7 +118,7 @@ export default class DnR extends React.Component {
     this.transform({width: 0, height: 0}, allowTransition);
   }
   maximize(allowTransition = true) {
-    this.transform({top: 0, left: 0, width: window.innerWidth, height: window.innerHeight}, allowTransition);
+    this.transform({top: 0, left: 0, width: this.props.attachedTo.innerWidth, height: this.props.attachedTo.innerHeight}, allowTransition);
   }
   render() {
     const {
@@ -127,8 +132,12 @@ export default class DnR extends React.Component {
       cursorRemap,
       children,
       boundary,
+      onMove,
+      onResize,
       ...other,
     } = this.props;
+
+    const pervFrameRect = {...this.frameRect};
 
     if (this.clicked) {
       let hits = this.hitEdges;
@@ -208,6 +217,16 @@ export default class DnR extends React.Component {
       if (res && typeof res === 'string') cursor = res;
     }
 
+    if(onMove && (pervFrameRect.top !== this.frameRect.top ||
+       pervFrameRect.left !== this.frameRect.left)) {
+      setTimeout(onMove.bind(this,this.frameRect, pervFrameRect));
+    }
+
+    if(onResize && (pervFrameRect.width !== this.frameRect.width ||
+       pervFrameRect.height !== this.frameRect.height)) {
+      setTimeout(onResize.bind(this,this.frameRect, pervFrameRect));
+    }
+
     return (
       <div ref="frame"
         onMouseDownCapture={this._onDown.bind(this)}
@@ -226,6 +245,7 @@ export default class DnR extends React.Component {
         {...other}>
         {titleBar}
         <div ref='content'
+          className='contentClassName'
           style={{position: 'absolute', width: '100%', top: theme.title.height, bottom: 0, ...contentStyle}}>
           {children}
         </div>
@@ -310,6 +330,7 @@ DnR.propTypes = {
     React.PropTypes.string,
   ]),
   style: React.PropTypes.object,
+  contentClassName: React.PropTypes.object,
   contentStyle: React.PropTypes.object,
   titleStyle: React.PropTypes.object,
   theme: React.PropTypes.object,
@@ -322,8 +343,12 @@ DnR.propTypes = {
   initialLeft: React.PropTypes.number,
   transition: React.PropTypes.string,
   animate: React.PropTypes.bool,
+  onMove: React.PropTypes.func,
+  onResize: React.PropTypes.func,
+  onTransform: React.PropTypes.func,
   cursorRemap: React.PropTypes.func,
   boundary: React.PropTypes.object,
+  attachedTo: React.PropTypes.object,
 };
 
 DnR.defaultProps = {
@@ -336,4 +361,5 @@ DnR.defaultProps = {
   initialTop: null,
   initialLeft: null,
   animate: true,
+  attachedTo: window,
 };
