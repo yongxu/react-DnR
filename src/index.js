@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import DnR from '../lib/DnR';
 
-import {OSXTheme, WindowsTheme} from '../lib/addons';
+import {OSXTheme, WindowsTheme} from '../lib/themes';
 let paneStyle = {
 	width: '50%',
 	height: '50%',
@@ -19,9 +19,9 @@ class App extends React.Component {
     };
 		this.OSX = OSXTheme({
 			title: 'OSX Theme',
-			onClose: ()=>this.refs.dnr.minimize(),
-			onMinimize: ()=>this.refs.dnr.minimize(),
-			onMaximize: ()=>this.refs.dnr.maximize(),
+			onClose: ()=>this.refs.subdnr.minimize(),
+			onMinimize: ()=>this.refs.subdnr.minimize(),
+			onMaximize: ()=>this.refs.subdnr.maximize(),
 		});
 		this.Windows = WindowsTheme({
 			title: 'Windows Theme',

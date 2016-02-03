@@ -187,13 +187,10 @@ export let WindowsTheme = ({title, onClose, onMinimize, onMaximize, titleBarColo
 		width: 25,
 		height: 25,
 		outline: 'none',
-		borderTop: 'none',
-		borderBottom: 'none',
-		borderRight: 'none',
-		borderWidth: '1px',
-		borderColor: 'rgba(0, 0, 0, 0.1)',
+		border: 'none',
 		textAlign: 'center'
 	};
+
 	const buttons = {
 		style: {
 			height: titleHeight,
@@ -211,7 +208,7 @@ export let WindowsTheme = ({title, onClose, onMinimize, onMaximize, titleBarColo
 			...buttonStyle,
 		  fontSize: '20px',
 		  fontWeight: 500,
-		  lineHeight: '32px',
+		  lineHeight: '36px',
 			backgroundColor: titleBarColor,
 		},
 		hoverStyle: {
@@ -222,12 +219,12 @@ export let WindowsTheme = ({title, onClose, onMinimize, onMaximize, titleBarColo
 		},
 		onClick: onClose
 	};
+
 	const minimizeButton = {
 		style: {
 			...buttonStyle,
 			lineHeight: '22px',
 			backgroundColor: titleBarColor,
-			borderLeft: 'none'
 		},
 		hoverStyle: {
 			backgroundColor: 'rgba(0, 0, 0, 0.1)'
@@ -237,17 +234,18 @@ export let WindowsTheme = ({title, onClose, onMinimize, onMaximize, titleBarColo
 		},
 		onClick: onMinimize
 	};
+	
 	const maximizeButton = {
 		style: {
 			...buttonStyle,
-			lineHeight: '19px',
+			lineHeight: '12px',
 			backgroundColor: titleBarColor
 		},
 		hoverStyle: {
-			backgroundColor: 'rgba(0, 0, 0, 0.1)'
+			backgroundColor: 'rgba(0, 0, 0, 0.1)',
 		},
 		downStyle: {
-			backgroundColor: 'rgba(0, 0, 0, 0.2)'
+			backgroundColor: 'rgba(0, 0, 0, 0.2)',
 		},
 		onClick: onMaximize
 	};

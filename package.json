@@ -4,7 +4,7 @@
   "description": "react-DnR, dragable and resizable window",
   "main": "dist/DnR.jsx",
   "scripts": {
-    "build": "webpack --progress --profile --colors",
+    "build": "webpack --config ./webpack.build.config.js --progress --profile --colors",
     "build-babel": "babel ./lib -d dist",
     "start": "webpack-dev-server --progress --colors"
   },
