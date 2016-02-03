@@ -1,8 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import DnR from '../lib/DnR';
+import DnR from '../modules/DnR';
 
-import {OSXTheme, WindowsTheme} from '../lib/themes';
+import {OSXTheme, WindowsTheme} from '../modules/themes';
 let paneStyle = {
 	width: '50%',
 	height: '50%',
