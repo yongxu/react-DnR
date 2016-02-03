@@ -171,7 +171,7 @@ export let OSXTheme = ({title, onClose, onMinimize, onMaximize}) => {
 	};
 };
 
-export let WindowsTheme = ({title, onClose, onMinimize, onMaximize}) => {
+export let WindowsTheme = ({title, onClose, onMinimize, onMaximize, titleBarColor = '#0095ff'}) => {
 	const titleHeight = 25;
 	const buttonRadius = 6;
 	const fontSize = 14;
@@ -187,6 +187,11 @@ export let WindowsTheme = ({title, onClose, onMinimize, onMaximize}) => {
 		width: 25,
 		height: 25,
 		outline: 'none',
+		borderTop: 'none',
+		borderBottom: 'none',
+		borderRight: 'none',
+		borderWidth: '1px',
+		borderColor: 'rgba(0, 0, 0, 0.1)',
 		textAlign: 'center'
 	};
 	const buttons = {
@@ -207,13 +212,13 @@ export let WindowsTheme = ({title, onClose, onMinimize, onMaximize}) => {
 		  fontSize: '20px',
 		  fontWeight: 500,
 		  lineHeight: '32px',
-			backgroundColor: 'rgb(255, 97, 89)',
+			backgroundColor: titleBarColor,
 		},
 		hoverStyle: {
-			backgroundColor: 'rgb(230, 72, 64)'
+			backgroundColor: '#ec6060'
 		},
 		downStyle: {
-			backgroundColor: 'rgb(204, 46, 38)'
+			backgroundColor: '#bc4040'
 		},
 		onClick: onClose
 	};
@@ -221,13 +226,14 @@ export let WindowsTheme = ({title, onClose, onMinimize, onMaximize}) => {
 		style: {
 			...buttonStyle,
 			lineHeight: '22px',
-			backgroundColor: 'rgb(255, 191, 47)'
+			backgroundColor: titleBarColor,
+			borderLeft: 'none'
 		},
 		hoverStyle: {
-			backgroundColor: 'rgb(230, 166, 22)'
+			backgroundColor: 'rgba(0, 0, 0, 0.1)'
 		},
 		downStyle: {
-			backgroundColor: 'rgb(204, 140, 0)'
+			backgroundColor: 'rgba(0, 0, 0, 0.2)'
 		},
 		onClick: onMinimize
 	};
@@ -235,13 +241,13 @@ export let WindowsTheme = ({title, onClose, onMinimize, onMaximize}) => {
 		style: {
 			...buttonStyle,
 			lineHeight: '19px',
-			backgroundColor: 'rgb(37, 204, 62)'
+			backgroundColor: titleBarColor
 		},
 		hoverStyle: {
-			backgroundColor: 'rgb(12, 179, 37)'
+			backgroundColor: 'rgba(0, 0, 0, 0.1)'
 		},
 		downStyle: {
-			backgroundColor: 'rgb(0, 153, 11)'
+			backgroundColor: 'rgba(0, 0, 0, 0.2)'
 		},
 		onClick: onMaximize
 	};
@@ -250,7 +256,7 @@ export let WindowsTheme = ({title, onClose, onMinimize, onMaximize}) => {
 			title: {
 				...defaultTheme.title,
 				fontFamily: fontFamily,
-				background: 'linear-gradient(0deg, #d8d8d8, #ececec)',
+				background: titleBarColor,
 				color: 'rgba(0, 0, 0, 0.7)',
 				fontSize: fontSize,
 				height: titleHeight,
