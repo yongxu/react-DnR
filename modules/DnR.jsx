@@ -57,7 +57,7 @@ export default class DnR extends React.Component {
       attachedTo,
     } = this.props;
 
-    const boundingBox = this._getFrameRect();
+    const boundingBox = this.getFrameRect();
     this.frameRect.width = initialWidth || boundingBox.width;
     this.frameRect.height = initialHeight || boundingBox.height;
     this.frameRect.top = initialTop || this.refs.frame.offsetTop;
@@ -76,7 +76,7 @@ export default class DnR extends React.Component {
     this.props.attachedTo.removeEventListener('mousemove', this.mouseUpListener);
   }
   transform(state, allowTransition = true, updateHistory = true) {
-    const boundingBox = this._getFrameRect();
+    const boundingBox = this.getFrameRect();
 
     let top = this.refs.frame.offsetTop;
     let left = this.refs.frame.offsetLeft;
@@ -252,14 +252,17 @@ export default class DnR extends React.Component {
       </div>
     );
   }
-  _getFrameRect() {
+  getFrameRect() {
     return this.refs.frame.getBoundingClientRect();
   }
-  _getTitleRect() {
+  getDOMFrame() {
+    return this.refs.frame;
+  }
+  getTitleRect() {
     return this.refs.title.getBoundingClientRect();
   }
   _cursorStatus(e){
-    const boundingBox = this._getFrameRect();
+    const boundingBox = this.getFrameRect();
     this.cursorX = e.clientX;
     this.cursorY = e.clientY;
 
@@ -286,7 +289,7 @@ export default class DnR extends React.Component {
       e.stopPropagation();
     }
     else {
-      const titleBounding = this._getTitleRect();
+      const titleBounding = this.getTitleRect();
       if (this.cursorX > titleBounding.left && this.cursorX < titleBounding.right &&
           this.cursorY > titleBounding.top && this.cursorY < titleBounding.bottom) {
         cursor = 'move';
@@ -308,7 +311,7 @@ export default class DnR extends React.Component {
   _onDown(e){
     this.allowTransition = false;
     this._cursorStatus(e);
-    const boundingBox = this._getFrameRect();
+    const boundingBox = this.getFrameRect();
     this.clicked = {x: e.clientX, y: e.clientY, boundingBox: boundingBox,
                     frameTop: this.refs.frame.offsetTop, frameLeft: this.refs.frame.offsetLeft};
   }
