@@ -5,11 +5,12 @@ module.exports = {
   entry: [
     //'webpack-dev-server/client?http://localhost:3000',
     //'webpack/hot/dev-server',
-    './src/index.js' 
+    './src/index.js'
   ],
   devtool: 'source-map',
   output: {
-    path: path.join(__dirname, 'public'),
+    path: path.join(__dirname, 'dist'),
+    publicPath: "/dist/",
     filename: 'bundle.js'
   },
   resolve: {
@@ -53,7 +54,6 @@ module.exports = {
     ]
   },
   devServer: {
-    contentBase: "./public",
     hot: true,
     inline: true,
     port: 3000
