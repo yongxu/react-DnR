@@ -1,6 +1,6 @@
 {
   "name": "react-dnr",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "react-DnR, dragable and resizable window",
   "files": [
     "*.md",
@@ -16,7 +16,8 @@
     "build-babel": "rimraf lib && babel ./modules -d lib",
     "build-es6": "rimraf es6 && babel ./modules -d es6 --blacklist=es6.modules",
     "build-umd": "webpack --config webpack.build.config.js modules/index.jsx umd/DnR.js",
-    "start": "webpack-dev-server --progress --colors"
+    "start": "webpack-dev-server --progress --colors",
+    "gh-pages": "webpack -p"
   },
   "repository": {
     "type": "git",

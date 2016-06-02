@@ -29,7 +29,7 @@ class App extends React.Component {
 			onMaximize: ()=>this.refs.subdnr.maximize(),
 		});
 		this.Windows = WindowsTheme({
-			title: 'Windows Theme',
+			title: 'React DnR',
 			onClose: ()=>this.refs.dnr.minimize(),
 			onMinimize: ()=>this.refs.dnr.minimize(),
 			onMaximize: ()=>this.refs.dnr.maximize(),
@@ -53,7 +53,7 @@ class App extends React.Component {
 					padding: 10,
 				}}>
 					<button
-						style={buttonStyle} 
+						style={buttonStyle}
 						onClick={()=>this.refs.dnr.minimize()}>
 						minimize
 					</button>
@@ -71,7 +71,7 @@ class App extends React.Component {
 				<DnR
 					ref='dnr'
 					{...this.Windows}
-					cursorRemap={(c) => c === 'move' ? 'default' : null} 
+					cursorRemap={(c) => c === 'move' ? 'default' : null}
 					style={paneStyle}>
 					<button
 						onClick={()=>this.refs.subdnr.minimize()}>
@@ -92,7 +92,7 @@ class App extends React.Component {
 					<DnR
 						ref='subdnr'
 						{...this.OSX}
-						cursorRemap={(c) => c === 'move' ? 'default' : null} 
+						cursorRemap={(c) => c === 'move' ? 'default' : null}
 						style={paneStyle}
 						boundary={{top: 0}}>
 						content

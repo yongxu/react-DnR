@@ -5,11 +5,12 @@ module.exports = {
   entry: [
     //'webpack-dev-server/client?http://localhost:3000',
     //'webpack/hot/dev-server',
-    './src/index.js' 
+    './src/index.js'
   ],
   devtool: 'source-map',
   output: {
-    path: path.join(__dirname, 'public'),
+    path: path.join(__dirname, 'dist'),
+    publicPath: "/dist/",
     filename: 'bundle.js'
   },
   resolve: {
@@ -45,15 +46,14 @@ module.exports = {
         loader: "url-loader?limit=10000&mimetype=image/gif"
       }, {
         test: /\.jpg/,
-        loader: "url-loader?limit=10000&mimetype=image/jpg"
+        loader: "url-loader?mimetype=image/jpg"
       }, {
         test: /\.png/,
-        loader: "url-loader?limit=10000&mimetype=image/png"
+        loader: "url-loader?mimetype=image/png"
       }
     ]
   },
   devServer: {
-    contentBase: "./public",
     hot: true,
     inline: true,
     port: 3000
