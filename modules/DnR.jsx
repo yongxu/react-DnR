@@ -98,11 +98,11 @@ export default class DnR extends React.Component {
                                 state.bottom ? (state.bottom - (state.height || height)) : top;
     this.frameRect.left = typeof state.left === 'number' ? state.left :
                                 state.right ? (state.right - (state.width || width)) : left;
-    this.frameRect.width = typeof state.width === 'number' ? state.width : 
-                                (typeof state.right === 'number' && typeof state.left === 'number') ? state.right - state.left : 
+    this.frameRect.width = typeof state.width === 'number' ? state.width :
+                                (typeof state.right === 'number' && typeof state.left === 'number') ? state.right - state.left :
                                 typeof state.right === 'number' ? state.right - this.frameRect.left : width;
-    this.frameRect.height = typeof state.height === 'number' ? state.height : 
-                                (typeof state.bottom === 'number' && typeof state.top === 'number') ? state.top - state.bottom : 
+    this.frameRect.height = typeof state.height === 'number' ? state.height :
+                                (typeof state.bottom === 'number' && typeof state.top === 'number') ? state.top - state.bottom :
                                 typeof state.bottom === 'number' ? state.bottom - this.frameRect.top : height;
     this.allowTransition = allowTransition;
 
@@ -151,7 +151,7 @@ export default class DnR extends React.Component {
           let currentWidth = boundingBox.right - this.cursorX;
           if (currentWidth > minWidth) {
             this.frameRect.width = currentWidth;
-            this.frameRect.left = this.clicked.frameLeft + this.cursorX - this.clicked.x; 
+            this.frameRect.left = this.clicked.frameLeft + this.cursorX - this.clicked.x;
           }
         }
 
@@ -159,7 +159,7 @@ export default class DnR extends React.Component {
           let currentHeight = boundingBox.bottom - this.cursorY;
           if (currentHeight > minHeight) {
             this.frameRect.height = currentHeight;
-            this.frameRect.top = this.clicked.frameTop + this.cursorY - this.clicked.y;  
+            this.frameRect.top = this.clicked.frameTop + this.cursorY - this.clicked.y;
           }
         }
       }
@@ -187,7 +187,7 @@ export default class DnR extends React.Component {
         }
       }
       if (typeof boundary.left === 'number' && left < boundary.left) {
-        this.frameRect.left = boundary.left;        
+        this.frameRect.left = boundary.left;
       }
       if (typeof boundary.right === 'number' && top + height > boundary.right) {
         this.frameRect.left = boundary.right - width;
@@ -198,17 +198,6 @@ export default class DnR extends React.Component {
       }
     }
 
-    let titleBar = (
-        <div ref="title"
-          style={{
-            ...theme.title,
-            ...titleStyle
-          }}>
-          {this.props.titleBar}
-        </div>);
-
-    let frameTransition = (animate && this.allowTransition) ? this.state.transition : {};
-
     let cursor = this.state.cursor;
 
     if (cursorRemap) {
@@ -217,13 +206,38 @@ export default class DnR extends React.Component {
       if (res && typeof res === 'string') cursor = res;
     }
 
+
+    const dnrState = {
+      cursor,
+      clicked: this.clicked,
+      frameRect: this.frameRect,
+      allowTransition: this.allowTransition
+    }
+
+    let titleBar = (
+        <div ref="title"
+          style={{
+            ...theme.title,
+            ...titleStyle,
+            cursor
+          }}>
+          {typeof this.props.titleBar !== 'string' ?
+            React.cloneElement(this.props.titleBar, {dnrState}) : this.props.titleBar}
+        </div>);
+
+    const childrenWithProps = React.Children.map(children, function(child) {
+        return typeof child === 'string' ? child : React.cloneElement(child, {dnrState})
+    })
+
+    let frameTransition = (animate && this.allowTransition) ? this.state.transition : {};
+
     if(onMove && (pervFrameRect.top !== this.frameRect.top ||
-       pervFrameRect.left !== this.frameRect.left)) {
+      pervFrameRect.left !== this.frameRect.left)) {
       setTimeout(onMove.bind(this,this.frameRect, pervFrameRect));
     }
 
     if(onResize && (pervFrameRect.width !== this.frameRect.width ||
-       pervFrameRect.height !== this.frameRect.height)) {
+      pervFrameRect.height !== this.frameRect.height)) {
       setTimeout(onResize.bind(this,this.frameRect, pervFrameRect));
     }
 
@@ -247,7 +261,7 @@ export default class DnR extends React.Component {
         <div ref='content'
           className='contentClassName'
           style={{position: 'absolute', width: '100%', top: theme.title.height, bottom: 0, ...contentStyle}}>
-          {children}
+          {childrenWithProps}
         </div>
       </div>
     );
