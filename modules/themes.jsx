@@ -4,7 +4,7 @@ import {defaultTheme} from './DnR';
 export class Button extends React.Component {
   constructor(props) {
     super(props);
-  	
+
   	this.state = {
   		hover: false,
   		down: false,
@@ -16,14 +16,19 @@ export class Button extends React.Component {
       hoverStyle,
       downStyle,
       children,
-      ...other,
+      cursor,
+      ...other
     } = this.props;
 
-  	let buttonStyle = {
+    const dragging = /resize$/.test(cursor);
+
+  	const buttonStyle = {
   		...style,
-  		...(this.state.hover ? hoverStyle : {}),
-  		...(this.state.down ? downStyle : {})
+  		...(this.state.hover && !dragging ? hoverStyle : {}),
+  		...(this.state.down && !dragging ? downStyle : {}),
+      cursor
   	};
+
   	return (
   		<button
   			onMouseEnter={()=>this.setState({hover:true})}
@@ -46,17 +51,18 @@ export const TitleBar = ({
 	button1Children,
 	button2Children,
 	button3Children,
+  dnrState,
 	...other
 }) =>
 	<div {...other}>
 		<div {...buttons}>
-			<Button {...button1}>
+			<Button {...button1} cursor={dnrState.cursor}>
 				{button1Children}
 			</Button>
-			<Button {...button2}>
+			<Button {...button2} cursor={dnrState.cursor}>
 				{button2Children}
 			</Button>
-			<Button {...button3}>
+			<Button {...button3} cursor={dnrState.cursor}>
 				{button3Children}
 			</Button>
 		</div>
@@ -234,7 +240,7 @@ export let WindowsTheme = ({title, onClose, onMinimize, onMaximize, titleBarColo
 		},
 		onClick: onMinimize
 	};
-	
+
 	const maximizeButton = {
 		style: {
 			...buttonStyle,

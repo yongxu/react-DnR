@@ -1,6 +1,14 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
+export const disableSelect = {
+  userSelect: 'none',
+  WebkitUserSelect: 'none',
+  msUserSelect: 'none',
+  MozUserSelect: 'none',
+  OUserSelect: 'none'
+}
+
 export const defaultTheme = {
   title: {
     userSelect: 'none',
@@ -201,7 +209,7 @@ export default class DnR extends React.Component {
     let cursor = this.state.cursor;
 
     if (cursorRemap) {
-      let res = cursorRemap.call(this,cursor);
+      let res = cursorRemap.call(this, cursor);
 
       if (res && typeof res === 'string') cursor = res;
     }
@@ -255,6 +263,7 @@ export default class DnR extends React.Component {
           cursor:cursor,
           ...style,
           ...this.frameRect,
+          ...(this.clicked ? disableSelect : {})
         }}
         {...other}>
         {titleBar}
