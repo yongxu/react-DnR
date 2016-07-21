@@ -1,14 +1,14 @@
-import React from "react";
-import {defaultTheme} from './DnR';
+import React from "react"
+import {defaultTheme} from './DnR'
 
 export class Button extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
 
   	this.state = {
   		hover: false,
   		down: false,
-  	};
+  	}
   }
   render() {
     const {
@@ -18,9 +18,9 @@ export class Button extends React.Component {
       children,
       cursor,
       ...other
-    } = this.props;
+    } = this.props
 
-    const dragging = /resize$/.test(cursor);
+    const dragging = /resize$/.test(cursor)
 
   	const buttonStyle = {
   		...style,
@@ -38,7 +38,7 @@ export class Button extends React.Component {
   			style={buttonStyle}
   			{...other}>
   			{children}
-  		</button>);
+  		</button>)
   }
 }
 
@@ -70,14 +70,14 @@ export const TitleBar = ({
 	</div>
 
 export let OSXTheme = ({title, onClose, onMinimize, onMaximize}) => {
-	const titleHeight = 25;
-	const buttonRadius = 6;
-	const fontSize = 14;
-	const fontFamily = 'Helvetica, sans-serif';
+	const titleHeight = 25
+	const buttonRadius = 6
+	const fontSize = 14
+	const fontFamily = 'Helvetica, sans-serif'
 
 	const style = {
 			height: titleHeight,
-	};
+	}
 
 	const buttonStyle = {
 		padding: 0,
@@ -89,7 +89,7 @@ export let OSXTheme = ({title, onClose, onMinimize, onMaximize}) => {
 		content: '',
 		border: '1px solid rgba(0, 0, 0, 0.2)',
 		outline: 'none',
-	};
+	}
 	const buttons = {
 		style: {
 			height: titleHeight,
@@ -99,7 +99,7 @@ export let OSXTheme = ({title, onClose, onMinimize, onMaximize}) => {
 			display: 'flex',
 			alignItems: 'center'
 		}
-	};
+	}
 
 	const closeButton = {
 		style: {
@@ -113,7 +113,7 @@ export let OSXTheme = ({title, onClose, onMinimize, onMaximize}) => {
 			backgroundColor: 'rgb(204, 46, 38)'
 		},
 		onClick: onClose
-	};
+	}
 	const minimizeButton = {
 		style: {
 			...buttonStyle,
@@ -139,7 +139,7 @@ export let OSXTheme = ({title, onClose, onMinimize, onMaximize}) => {
 			backgroundColor: 'rgb(0, 153, 11)'
 		},
 		onClick: onMaximize
-	};
+	}
 	return {
 		theme: {
 			title: {
@@ -174,8 +174,8 @@ export let OSXTheme = ({title, onClose, onMinimize, onMaximize}) => {
 						{title}
 					</div>
 			</TitleBar>),
-	};
-};
+	}
+}
 
 export let WindowsTheme = ({title, onClose, onMinimize, onMaximize, titleBarColor = '#0095ff'}) => {
 	const titleHeight = 25;
@@ -185,7 +185,7 @@ export let WindowsTheme = ({title, onClose, onMinimize, onMaximize, titleBarColo
 
 	const style = {
 			height: titleHeight,
-	};
+	}
 
 	const buttonStyle = {
 		padding: 0,
@@ -195,7 +195,7 @@ export let WindowsTheme = ({title, onClose, onMinimize, onMaximize, titleBarColo
 		outline: 'none',
 		border: 'none',
 		textAlign: 'center'
-	};
+	}
 
 	const buttons = {
 		style: {
@@ -207,7 +207,7 @@ export let WindowsTheme = ({title, onClose, onMinimize, onMaximize, titleBarColo
 			alignItems: 'center',
 			verticalAlign: 'baseline',
 		}
-	};
+	}
 
 	const closeButton = {
 		style: {
@@ -224,7 +224,7 @@ export let WindowsTheme = ({title, onClose, onMinimize, onMaximize, titleBarColo
 			backgroundColor: '#bc4040'
 		},
 		onClick: onClose
-	};
+	}
 
 	const minimizeButton = {
 		style: {
@@ -239,7 +239,7 @@ export let WindowsTheme = ({title, onClose, onMinimize, onMaximize, titleBarColo
 			backgroundColor: 'rgba(0, 0, 0, 0.2)'
 		},
 		onClick: onMinimize
-	};
+	}
 
 	const maximizeButton = {
 		style: {
@@ -254,7 +254,7 @@ export let WindowsTheme = ({title, onClose, onMinimize, onMaximize, titleBarColo
 			backgroundColor: 'rgba(0, 0, 0, 0.2)',
 		},
 		onClick: onMaximize
-	};
+	}
 	return {
 		theme: {
 			title: {
@@ -289,5 +289,5 @@ export let WindowsTheme = ({title, onClose, onMinimize, onMaximize, titleBarColo
 						{title}
 					</div>
 			</TitleBar>),
-	};
-};
+	}
+}

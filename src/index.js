@@ -1,39 +1,39 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import DnR from '../modules/DnR';
+import React from "react"
+import ReactDOM from "react-dom"
+import DnR from '../modules/DnR'
 
-import {OSXTheme, WindowsTheme} from '../modules/themes';
+import {OSXTheme, WindowsTheme} from '../modules/themes'
 const paneStyle = {
 	width: '80%',
 	height: '50%',
 	top: '25%',
 	left: '10%',
 	backgroundColor: 'rgba(0, 0, 0, 0.2)'
-};
+}
 
 const buttonStyle = {
 		paddingLeft: 10,
 		textAlign: 'center'
-};
+}
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       minimize: false
-    };
+    }
 		this.OSX = OSXTheme({
 			title: 'OSX Theme',
 			onClose: ()=>this.refs.subdnr.minimize(),
 			onMinimize: ()=>this.refs.subdnr.minimize(),
 			onMaximize: ()=>this.refs.subdnr.maximize(),
-		});
+		})
 		this.Windows = WindowsTheme({
 			title: 'React DnR',
 			onClose: ()=>this.refs.dnr.minimize(),
 			onMinimize: ()=>this.refs.dnr.minimize(),
 			onMaximize: ()=>this.refs.dnr.maximize(),
-		});
+		})
 	}
 	render() {
 		return (
@@ -99,9 +99,9 @@ class App extends React.Component {
 					</DnR>
 				</DnR>
 			</div>
-		);
+		)
 	}
 }
 
 
-ReactDOM.render(<App/>, document.getElementById("main"));
+ReactDOM.render(<App/>, document.getElementById("main"))
