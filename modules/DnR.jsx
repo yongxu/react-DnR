@@ -55,6 +55,9 @@ export default class DnR extends React.Component {
       cursor: 'auto',
       transition: prefixedTransition(transition ? transition : theme.transition)
     };
+
+    this.mouseMoveListener = this._onMove.bind(this)
+    this.mouseUpListener = this._onUp.bind(this)
   }
   componentDidMount() {
     const {
@@ -71,8 +74,8 @@ export default class DnR extends React.Component {
     this.frameRect.top = initialTop || this.refs.frame.offsetTop
     this.frameRect.left = initialLeft || this.refs.frame.offsetLeft
 
-    this.mouseMoveListener = attachedTo.addEventListener('mousemove', this._onMove.bind(this))
-    this.mouseUpListener = attachedTo.addEventListener('mouseup', this._onUp.bind(this))
+    attachedTo.addEventListener('mousemove', this.mouseMoveListener)
+    attachedTo.addEventListener('mouseup', this.mouseUpListener)
   }
   componentWillReceiveProps(nextProps) {
     if (nextProps.transition !== this.props.transition){
@@ -81,7 +84,7 @@ export default class DnR extends React.Component {
   }
   componentWillUnmount() {
     this.props.attachedTo.removeEventListener('mousemove', this.mouseMoveListener)
-    this.props.attachedTo.removeEventListener('mousemove', this.mouseUpListener)
+    this.props.attachedTo.removeEventListener('mouseup', this.mouseUpListener)
   }
   transform(state, allowTransition = true, updateHistory = true) {
     const boundingBox = this.getFrameRect()

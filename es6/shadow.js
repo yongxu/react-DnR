@@ -34,7 +34,7 @@ var Shadow = function (_React$Component) {
   function Shadow() {
     _classCallCheck(this, Shadow);
 
-    return _possibleConstructorReturn(this, Object.getPrototypeOf(Shadow).apply(this, arguments));
+    return _possibleConstructorReturn(this, (Shadow.__proto__ || Object.getPrototypeOf(Shadow)).apply(this, arguments));
   }
 
   _createClass(Shadow, [{
