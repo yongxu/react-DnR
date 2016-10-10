@@ -31,7 +31,7 @@ var Button = exports.Button = function (_React$Component) {
 	function Button(props) {
 		_classCallCheck(this, Button);
 
-		var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Button).call(this, props));
+		var _this = _possibleConstructorReturn(this, (Button.__proto__ || Object.getPrototypeOf(Button)).call(this, props));
 
 		_this.state = {
 			hover: false,
@@ -50,10 +50,16 @@ var Button = exports.Button = function (_React$Component) {
 			var hoverStyle = _props.hoverStyle;
 			var downStyle = _props.downStyle;
 			var children = _props.children;
+			var cursor = _props.cursor;
 
-			var other = _objectWithoutProperties(_props, ['style', 'hoverStyle', 'downStyle', 'children']);
+			var other = _objectWithoutProperties(_props, ['style', 'hoverStyle', 'downStyle', 'children', 'cursor']);
 
-			var buttonStyle = _extends({}, style, this.state.hover ? hoverStyle : {}, this.state.down ? downStyle : {});
+			var dragging = /resize$/.test(cursor);
+
+			var buttonStyle = _extends({}, style, this.state.hover && !dragging ? hoverStyle : {}, this.state.down && !dragging ? downStyle : {}, {
+				cursor: cursor
+			});
+
 			return _react2.default.createElement(
 				'button',
 				_extends({
@@ -88,8 +94,9 @@ var TitleBar = exports.TitleBar = function TitleBar(_ref) {
 	var button1Children = _ref.button1Children;
 	var button2Children = _ref.button2Children;
 	var button3Children = _ref.button3Children;
+	var dnrState = _ref.dnrState;
 
-	var other = _objectWithoutProperties(_ref, ['children', 'buttons', 'button1', 'button2', 'button3', 'button1Children', 'button2Children', 'button3Children']);
+	var other = _objectWithoutProperties(_ref, ['children', 'buttons', 'button1', 'button2', 'button3', 'button1Children', 'button2Children', 'button3Children', 'dnrState']);
 
 	return _react2.default.createElement(
 		'div',
@@ -99,17 +106,17 @@ var TitleBar = exports.TitleBar = function TitleBar(_ref) {
 			buttons,
 			_react2.default.createElement(
 				Button,
-				button1,
+				_extends({}, button1, { cursor: dnrState.cursor }),
 				button1Children
 			),
 			_react2.default.createElement(
 				Button,
-				button2,
+				_extends({}, button2, { cursor: dnrState.cursor }),
 				button2Children
 			),
 			_react2.default.createElement(
 				Button,
-				button3,
+				_extends({}, button3, { cursor: dnrState.cursor }),
 				button3Children
 			)
 		),
@@ -331,9 +338,9 @@ var WindowsTheme = exports.WindowsTheme = function WindowsTheme(_ref3) {
 				button1: minimizeButton,
 				button2: maximizeButton,
 				button3: closeButton,
-				button1Children: '‒',
-				button2Children: '□',
-				button3Children: '˟' },
+				button1Children: '\u2012',
+				button2Children: '\u25A1',
+				button3Children: '\u02DF' },
 			_react2.default.createElement(
 				'div',
 				{ style: {
