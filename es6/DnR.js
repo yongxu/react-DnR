@@ -19,8 +19,6 @@ var _reactDom2 = _interopRequireDefault(_reactDom);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -73,9 +71,9 @@ var DnR = function (_React$Component) {
 
     var _this = _possibleConstructorReturn(this, (DnR.__proto__ || Object.getPrototypeOf(DnR)).call(this, props));
 
-    var _this$props = _this.props;
-    var transition = _this$props.transition;
-    var theme = _this$props.theme;
+    var _this$props = _this.props,
+        transition = _this$props.transition,
+        theme = _this$props.theme;
 
     _this.cursorX = 0;
     _this.cursorY = 0;
@@ -95,12 +93,12 @@ var DnR = function (_React$Component) {
   _createClass(DnR, [{
     key: "componentDidMount",
     value: function componentDidMount() {
-      var _props = this.props;
-      var initialWidth = _props.initialWidth;
-      var initialHeight = _props.initialHeight;
-      var initialTop = _props.initialTop;
-      var initialLeft = _props.initialLeft;
-      var attachedTo = _props.attachedTo;
+      var _props = this.props,
+          initialWidth = _props.initialWidth,
+          initialHeight = _props.initialHeight,
+          initialTop = _props.initialTop,
+          initialLeft = _props.initialLeft,
+          attachedTo = _props.attachedTo;
 
 
       var boundingBox = this.getFrameRect();
@@ -186,21 +184,20 @@ var DnR = function (_React$Component) {
     value: function render() {
       var _this2 = this;
 
-      var _props2 = this.props;
-      var style = _props2.style;
-      var contentStyle = _props2.contentStyle;
-      var titleStyle = _props2.titleStyle;
-      var theme = _props2.theme;
-      var minWidth = _props2.minWidth;
-      var minHeight = _props2.minHeight;
-      var animate = _props2.animate;
-      var cursorRemap = _props2.cursorRemap;
-      var children = _props2.children;
-      var boundary = _props2.boundary;
-      var onMove = _props2.onMove;
-      var onResize = _props2.onResize;
+      var _props2 = this.props,
+          style = _props2.style,
+          contentStyle = _props2.contentStyle,
+          titleStyle = _props2.titleStyle,
+          theme = _props2.theme,
+          minWidth = _props2.minWidth,
+          minHeight = _props2.minHeight,
+          animate = _props2.animate,
+          cursorRemap = _props2.cursorRemap,
+          children = _props2.children,
+          boundary = _props2.boundary,
+          onMove = _props2.onMove,
+          onResize = _props2.onResize;
 
-      var other = _objectWithoutProperties(_props2, ["style", "contentStyle", "titleStyle", "theme", "minWidth", "minHeight", "animate", "cursorRemap", "children", "boundary", "onMove", "onResize"]);
 
       var pervFrameRect = _extends({}, this.frameRect);
 
@@ -234,11 +231,11 @@ var DnR = function (_React$Component) {
       }
 
       if (boundary) {
-        var _frameRect = this.frameRect;
-        var top = _frameRect.top;
-        var left = _frameRect.left;
-        var width = _frameRect.width;
-        var height = _frameRect.height;
+        var _frameRect = this.frameRect,
+            top = _frameRect.top,
+            left = _frameRect.left,
+            width = _frameRect.width,
+            height = _frameRect.height;
 
         if (typeof boundary.top === 'number' && top < boundary.top) {
           this.frameRect.top = boundary.top;
@@ -299,10 +296,9 @@ var DnR = function (_React$Component) {
       if (onResize && (pervFrameRect.width !== this.frameRect.width || pervFrameRect.height !== this.frameRect.height)) {
         setTimeout(onResize.bind(this, this.frameRect, pervFrameRect));
       }
-
       return _react2.default.createElement(
         "div",
-        _extends({ ref: "frame",
+        { ref: "frame",
           onMouseDownCapture: this._onDown.bind(this),
           onMouseMoveCapture: function onMouseMoveCapture(e) {
             if (_this2.clicked !== null) {
@@ -311,8 +307,7 @@ var DnR = function (_React$Component) {
           },
           style: _extends({}, theme.frame, frameTransition, {
             cursor: cursor
-          }, style, this.frameRect, this.clicked ? disableSelect : {})
-        }, other),
+          }, style, this.frameRect, this.clicked ? disableSelect : {}) },
         titleBar,
         _react2.default.createElement(
           "div",

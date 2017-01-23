@@ -51,10 +51,9 @@ export const TitleBar = ({
 	button1Children,
 	button2Children,
 	button3Children,
-  dnrState,
-	...other
+  dnrState
 }) =>
-	<div {...other}>
+	<div>
 		<div {...buttons}>
 			<Button {...button1} cursor={dnrState.cursor}>
 				{button1Children}

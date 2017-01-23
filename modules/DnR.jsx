@@ -144,8 +144,7 @@ export default class DnR extends React.Component {
       children,
       boundary,
       onMove,
-      onResize,
-      ...other,
+      onResize
     } = this.props
 
     const pervFrameRect = {...this.frameRect}
@@ -251,7 +250,6 @@ export default class DnR extends React.Component {
       pervFrameRect.height !== this.frameRect.height)) {
       setTimeout(onResize.bind(this,this.frameRect, pervFrameRect))
     }
-
     return (
       <div ref="frame"
         onMouseDownCapture={this._onDown.bind(this)}
@@ -267,8 +265,7 @@ export default class DnR extends React.Component {
           ...style,
           ...this.frameRect,
           ...(this.clicked ? disableSelect : {})
-        }}
-        {...other}>
+        }}>
         {titleBar}
         <div ref='content'
           className='contentClassName'

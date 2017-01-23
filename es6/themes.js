@@ -45,14 +45,13 @@ var Button = exports.Button = function (_React$Component) {
 		value: function render() {
 			var _this2 = this;
 
-			var _props = this.props;
-			var style = _props.style;
-			var hoverStyle = _props.hoverStyle;
-			var downStyle = _props.downStyle;
-			var children = _props.children;
-			var cursor = _props.cursor;
-
-			var other = _objectWithoutProperties(_props, ['style', 'hoverStyle', 'downStyle', 'children', 'cursor']);
+			var _props = this.props,
+			    style = _props.style,
+			    hoverStyle = _props.hoverStyle,
+			    downStyle = _props.downStyle,
+			    children = _props.children,
+			    cursor = _props.cursor,
+			    other = _objectWithoutProperties(_props, ['style', 'hoverStyle', 'downStyle', 'children', 'cursor']);
 
 			var dragging = /resize$/.test(cursor);
 
@@ -86,21 +85,18 @@ var Button = exports.Button = function (_React$Component) {
 }(_react2.default.Component);
 
 var TitleBar = exports.TitleBar = function TitleBar(_ref) {
-	var children = _ref.children;
-	var buttons = _ref.buttons;
-	var button1 = _ref.button1;
-	var button2 = _ref.button2;
-	var button3 = _ref.button3;
-	var button1Children = _ref.button1Children;
-	var button2Children = _ref.button2Children;
-	var button3Children = _ref.button3Children;
-	var dnrState = _ref.dnrState;
-
-	var other = _objectWithoutProperties(_ref, ['children', 'buttons', 'button1', 'button2', 'button3', 'button1Children', 'button2Children', 'button3Children', 'dnrState']);
-
+	var children = _ref.children,
+	    buttons = _ref.buttons,
+	    button1 = _ref.button1,
+	    button2 = _ref.button2,
+	    button3 = _ref.button3,
+	    button1Children = _ref.button1Children,
+	    button2Children = _ref.button2Children,
+	    button3Children = _ref.button3Children,
+	    dnrState = _ref.dnrState;
 	return _react2.default.createElement(
 		'div',
-		other,
+		null,
 		_react2.default.createElement(
 			'div',
 			buttons,
@@ -125,10 +121,10 @@ var TitleBar = exports.TitleBar = function TitleBar(_ref) {
 };
 
 var OSXTheme = exports.OSXTheme = function OSXTheme(_ref2) {
-	var title = _ref2.title;
-	var onClose = _ref2.onClose;
-	var onMinimize = _ref2.onMinimize;
-	var onMaximize = _ref2.onMaximize;
+	var title = _ref2.title,
+	    onClose = _ref2.onClose,
+	    onMinimize = _ref2.onMinimize,
+	    onMaximize = _ref2.onMaximize;
 
 	var titleHeight = 25;
 	var buttonRadius = 6;
@@ -237,12 +233,12 @@ var OSXTheme = exports.OSXTheme = function OSXTheme(_ref2) {
 };
 
 var WindowsTheme = exports.WindowsTheme = function WindowsTheme(_ref3) {
-	var title = _ref3.title;
-	var onClose = _ref3.onClose;
-	var onMinimize = _ref3.onMinimize;
-	var onMaximize = _ref3.onMaximize;
-	var _ref3$titleBarColor = _ref3.titleBarColor;
-	var titleBarColor = _ref3$titleBarColor === undefined ? '#0095ff' : _ref3$titleBarColor;
+	var title = _ref3.title,
+	    onClose = _ref3.onClose,
+	    onMinimize = _ref3.onMinimize,
+	    onMaximize = _ref3.onMaximize,
+	    _ref3$titleBarColor = _ref3.titleBarColor,
+	    titleBarColor = _ref3$titleBarColor === undefined ? '#0095ff' : _ref3$titleBarColor;
 
 	var titleHeight = 25;
 	var buttonRadius = 6;
