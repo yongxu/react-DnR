@@ -1,7 +1,7 @@
 # react-DnR
 ==============
 
-Dragable and Resizable window build with React.js.
+Draggable and Resizable window build with React.js.
 
 Try it out here: http://yongxu.ren/react-DnR/
 
