@@ -20,7 +20,6 @@ Example
 
 ```jsx
 
-/** @jsx React.DOM */
 import React from "react";
 import ReactDOM from "react-dom";
 import DnR from '../modules/DnR';
