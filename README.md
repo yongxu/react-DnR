@@ -11,7 +11,7 @@ Installation
 The easiest way to use react-DnR is to install it from npm and include it in your React build process (using [Webpack](http://webpack.github.io/), [Browserify](http://browserify.org/), etc).
 
 ```
-npm install --save react-DnR
+npm install --save react-dnr
 ```
 
 
@@ -20,7 +20,6 @@ Example
 
 ```jsx
 
-/** @jsx React.DOM */
 import React from "react";
 import ReactDOM from "react-dom";
 import DnR from '../modules/DnR';
